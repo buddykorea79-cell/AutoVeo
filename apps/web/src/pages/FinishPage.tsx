@@ -30,23 +30,39 @@ const statusTone = (status: string): string =>
 export const FinishPage = ({pipeline, project}: FinishPageProps) => {
   const [modeOverride, setModeOverride] = useState<MusicMode | null>(null);
   const [trackOverride, setTrackOverride] = useState<string | null>(null);
+  const [catalogTick, setCatalogTick] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const [catalogMessage, setCatalogMessage] = useState<string | null>(null);
 
   const projectId = project?.id ?? null;
   const timelineReady = isDone(project?.steps.timeline?.state);
   const musicReady = isDone(project?.steps.music?.state);
   const renderReady = isDone(project?.steps.render?.state);
 
-  const musicKey = `${projectId ?? "none"}:${project?.steps.music?.state ?? ""}`;
+  const musicKey = `${projectId ?? "none"}:${project?.steps.music?.state ?? ""}:${catalogTick}`;
   const renderKey = `${projectId ?? "none"}:${project?.steps.render?.state ?? ""}:${
     project?.steps.finalize?.state ?? ""
   }`;
 
   const libraryState = useRemoteData<MusicLibrary | null>(
     useCallback(
-      () => (projectId === null ? Promise.resolve(null) : api.getMusicLibrary(projectId)),
+      () =>
+        projectId === null
+          ? Promise.resolve(null)
+          : api.getMusicLibrary(projectId).catch(() => null),
       [projectId],
     ),
     musicKey,
+  );
+  const catalogState = useRemoteData<Awaited<ReturnType<typeof api.getMusicCatalog>> | null>(
+    useCallback(
+      () =>
+        api
+          .getMusicCatalog()
+          .catch(() => null as unknown as Awaited<ReturnType<typeof api.getMusicCatalog>>),
+      [],
+    ),
+    `catalog:${catalogTick}`,
   );
   const selectionState = useRemoteData<MusicSelection | null>(
     useCallback(
@@ -64,8 +80,46 @@ export const FinishPage = ({pipeline, project}: FinishPageProps) => {
   );
 
   const library = libraryState.data;
+  const catalog = catalogState.data as {
+    catalog: {
+      tracks: {
+        id: string;
+        path: string;
+        mood: string[];
+        energy: number;
+        attribution: string;
+        durationSec?: number;
+      }[];
+    };
+    files: string[];
+  } | null;
   const selection = selectionState.data;
   const result = resultState.data;
+  // manual에서는 library가 없으면 catalog로 폴백
+  const displayTracks =
+    library !== null && library.tracks.length > 0
+      ? (library.tracks as {
+          id: string;
+          path: string;
+          mood: string[];
+          energy: number;
+          attribution: string;
+          durationSec?: number;
+        }[])
+      : ((
+          catalog?.catalog as
+            | {
+                tracks: {
+                  id: string;
+                  path: string;
+                  mood: string[];
+                  energy: number;
+                  attribution: string;
+                  durationSec?: number;
+                }[];
+              }
+            | undefined
+        )?.tracks ?? []);
   const mode: MusicMode = modeOverride ?? selection?.mode ?? "auto";
   const trackId = trackOverride ?? selection?.choices[0]?.trackId ?? null;
   const setMode = setModeOverride;
@@ -142,40 +196,186 @@ export const FinishPage = ({pipeline, project}: FinishPageProps) => {
               ))}
             </div>
 
-            {mode === "manual" ? (
-              library === null || library.tracks.length === 0 ? (
-                <div className="notice notice-warn">
-                  사용할 수 있는 음악이 없습니다. <span className="mono">music/</span> 폴더에 MP3를
-                  넣고 <span className="mono">config/music/tracks.json</span>에 등록한 뒤 자동
-                  추천을 한 번 실행하세요.
+            {mode === "auto" ? (
+              <div className="stack">
+                <div className="notice">
+                  <strong>자동 추천</strong> — <span className="mono">music/</span> 폴더 안의 모든
+                  MP3를 자동으로 찾아 <span className="mono">config/music/tracks.json</span>에
+                  등록한 뒤, 영상의 무드·에너지에 맞는 곡을 추천합니다. 파일을 넣고 아래 버튼을
+                  누르면 바로 반영됩니다.
                 </div>
-              ) : (
-                <div className="track-list">
-                  {library.tracks.map((track) => (
-                    <div className="track-row" data-selected={trackId === track.id} key={track.id}>
-                      <div>
-                        <div className="track-name">{track.id}</div>
-                        <div className="track-meta">
-                          {track.mood.join(", ")} · 에너지 {Math.round(track.energy * 100)}% ·{" "}
-                          {Math.round(track.durationSec)}초 · {track.attribution}
-                        </div>
+                <div className="btn-row">
+                  <button
+                    className="btn"
+                    disabled={pipeline.busy || uploading}
+                    onClick={async () => {
+                      setCatalogMessage(null);
+                      try {
+                        const res = await api.refreshMusicCatalog();
+                        setCatalogMessage(res.message);
+                        setCatalogTick((v) => v + 1);
+                      } catch (e) {
+                        setCatalogMessage(e instanceof Error ? e.message : String(e));
+                      }
+                    }}
+                    type="button"
+                  >
+                    music 폴더 스캔하여 json 생성/갱신
+                  </button>
+                  {library !== null ? (
+                    <span className="panel-note" style={{alignSelf: "center"}}>
+                      현재 등록 {library.tracks.length}곡
+                    </span>
+                  ) : null}
+                </div>
+                {catalogMessage !== null ? <div className="notice">{catalogMessage}</div> : null}
+                {library !== null && library.warnings.length > 0 ? (
+                  <div className="stack">
+                    {library.warnings.map((w) => (
+                      <div className="notice notice-warn" key={`${w.trackId}:${w.code}`}>
+                        {w.message}
                       </div>
-                      <audio
-                        controls
-                        preload="none"
-                        src={api.musicPreviewUrl(project.id, track.id)}
-                      />
-                      <button
-                        className={`btn btn-sm ${trackId === track.id ? "" : "btn-primary"}`}
-                        onClick={() => setTrackId(track.id)}
-                        type="button"
-                      >
-                        {trackId === track.id ? "선택됨" : "선택"}
-                      </button>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            {mode === "manual" ? (
+              <div className="stack">
+                <div className="notice">
+                  <strong>직접 선택</strong> — PC에서 MP3를 직접 고르거나, 서버 파일 대화상자로
+                  선택할 수 있습니다. 선택한 파일은 <span className="mono">music/manual/</span>에
+                  복사되어 카탈로그에 자동 등록됩니다.
                 </div>
-              )
+                <div className="btn-row" style={{gap: 8, flexWrap: "wrap"}}>
+                  <label className="btn" style={{cursor: uploading ? "not-allowed" : "pointer"}}>
+                    {uploading ? "업로드 중…" : "PC에서 MP3 직접 선택"}
+                    <input
+                      accept=".mp3,audio/mpeg"
+                      disabled={uploading || pipeline.busy}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file === undefined || file === null) return;
+                        setUploading(true);
+                        setCatalogMessage(null);
+                        try {
+                          const base64 = await new Promise<string>((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                              const result = reader.result as string;
+                              const comma = result.indexOf(",");
+                              resolve(comma >= 0 ? result.slice(comma + 1) : result);
+                            };
+                            reader.onerror = () => reject(reader.error);
+                            reader.readAsDataURL(file);
+                          });
+                          const res = await api.uploadMusic(file.name, base64);
+                          setCatalogMessage(`업로드 완료: ${res.path}`);
+                          setCatalogTick((v) => v + 1);
+                          setTrackId((res.track as {id: string}).id ?? null);
+                        } catch (err) {
+                          setCatalogMessage(err instanceof Error ? err.message : String(err));
+                        } finally {
+                          setUploading(false);
+                          e.target.value = "";
+                        }
+                      }}
+                      style={{display: "none"}}
+                      type="file"
+                    />
+                  </label>
+                  <button
+                    className="btn"
+                    disabled={uploading || pipeline.busy}
+                    onClick={async () => {
+                      setCatalogMessage(null);
+                      try {
+                        const res = await api.selectMusicFile();
+                        if (res.filePath === null) {
+                          setCatalogMessage("선택 취소됨");
+                        } else {
+                          setCatalogMessage(`선택됨: ${res.filePath}`);
+                          setCatalogTick((v) => v + 1);
+                        }
+                      } catch (err) {
+                        setCatalogMessage(err instanceof Error ? err.message : String(err));
+                      }
+                    }}
+                    type="button"
+                  >
+                    서버 파일 대화상자로 선택
+                  </button>
+                  <button
+                    className="btn"
+                    disabled={uploading || pipeline.busy}
+                    onClick={async () => {
+                      setCatalogMessage(null);
+                      try {
+                        const res = await api.refreshMusicCatalog();
+                        setCatalogMessage(res.message);
+                        setCatalogTick((v) => v + 1);
+                      } catch (e) {
+                        setCatalogMessage(e instanceof Error ? e.message : String(e));
+                      }
+                    }}
+                    type="button"
+                  >
+                    music 폴더 다시 스캔
+                  </button>
+                </div>
+                {catalogMessage !== null ? <div className="notice">{catalogMessage}</div> : null}
+                {catalogState.data === null && library === null ? (
+                  <div className="notice notice-warn">카탈로그를 불러오는 중…</div>
+                ) : displayTracks.length === 0 ? (
+                  <div className="notice notice-warn">
+                    등록된 음악이 없습니다. 위에서 MP3를 직접 선택하거나,{" "}
+                    <span className="mono">music/</span> 폴더에 MP3를 넣고 다시 스캔하세요.
+                  </div>
+                ) : (
+                  <div className="track-list">
+                    {displayTracks.map((track) => {
+                      const isLibrary = library?.tracks.some((t) => t.id === track.id) ?? false;
+                      const durationSec = (track as {durationSec?: number}).durationSec;
+                      return (
+                        <div
+                          className="track-row"
+                          data-selected={trackId === track.id}
+                          key={track.id}
+                        >
+                          <div>
+                            <div className="track-name">{track.id}</div>
+                            <div className="track-meta">
+                              {track.mood.join(", ")} · 에너지 {Math.round(track.energy * 100)}% ·{" "}
+                              {durationSec !== undefined
+                                ? `${Math.round(durationSec)}초`
+                                : "길이 미측정"}{" "}
+                              · {track.attribution} · <span className="mono">{track.path}</span>
+                              {!isLibrary ? " · 카탈로그" : ""}
+                            </div>
+                          </div>
+                          {isLibrary ? (
+                            <audio
+                              controls
+                              preload="none"
+                              src={api.musicPreviewUrl(project!.id, track.id)}
+                            />
+                          ) : (
+                            <span className="panel-note">미리듣기는 음악 적용 후 가능</span>
+                          )}
+                          <button
+                            className={`btn btn-sm ${trackId === track.id ? "" : "btn-primary"}`}
+                            onClick={() => setTrackId(track.id)}
+                            type="button"
+                          >
+                            {trackId === track.id ? "선택됨" : "선택"}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             ) : null}
 
             {selection === null ? null : (

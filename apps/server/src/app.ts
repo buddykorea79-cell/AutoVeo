@@ -8,6 +8,7 @@ import type {MediaTranscoder} from "./services/ffmpeg.js";
 import type {MediaProbe} from "./services/ffprobe.js";
 import {registerAssetRoutes} from "./routes/assets.js";
 import {registerSystemRoutes} from "./routes/system.js";
+import type {FilePicker} from "./services/file-picker.js";
 import type {FolderPicker} from "./services/folder-picker.js";
 import type {RemotionRenderService} from "./services/remotion.js";
 import type {FinalVideoService} from "./steps/finalize.js";
@@ -18,6 +19,7 @@ export interface AppDependencies {
   readonly comfy?: ComfyService;
   readonly database: BetterSqlite3.Database;
   readonly defaultFolderPath?: string;
+  readonly filePicker?: FilePicker;
   readonly folderPicker?: FolderPicker;
   readonly finalizer?: FinalVideoService;
   readonly getComfy?: () => ComfyService | undefined;
@@ -38,6 +40,7 @@ export const buildApp = ({
   comfy,
   database,
   defaultFolderPath,
+  filePicker,
   folderPicker,
   finalizer,
   getComfy,
@@ -51,7 +54,7 @@ export const buildApp = ({
   storage,
   transcoder,
 }: AppDependencies) => {
-  const app = Fastify({logger});
+  const app = Fastify({logger, bodyLimit: 1024 * 1024 * 60});
   const resolveComfy = getComfy ?? (() => comfy);
 
   app.setErrorHandler((error, _request, reply) => {
@@ -80,8 +83,11 @@ export const buildApp = ({
   registerSystemRoutes(app, {
     database,
     defaultFolderPath,
+    filePicker,
     folderPicker,
     getComfy: resolveComfy,
+    musicCatalogPath,
+    musicRoot,
     ollama,
   });
 

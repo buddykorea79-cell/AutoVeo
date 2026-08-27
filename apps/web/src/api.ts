@@ -196,4 +196,24 @@ export const api = {
 
   selectFolder: () =>
     request<{readonly folderPath: string | null}>("/api/system/select-folder", {method: "POST"}),
+
+  selectMusicFile: () =>
+    request<{readonly filePath: string | null; readonly registered: boolean}>(
+      "/api/system/select-music-file",
+      {method: "POST"},
+    ),
+
+  getMusicCatalog: () =>
+    request<{readonly catalog: unknown; readonly files: readonly string[]}>("/api/music/catalog"),
+
+  refreshMusicCatalog: () =>
+    request<{readonly catalog: unknown; readonly message: string}>("/api/music/catalog/refresh", {
+      method: "POST",
+    }),
+
+  uploadMusic: (filename: string, dataBase64: string) =>
+    request<{readonly path: string; readonly track: unknown}>("/api/music/upload", {
+      body: JSON.stringify({dataBase64, filename}),
+      method: "POST",
+    }),
 };

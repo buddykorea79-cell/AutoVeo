@@ -7,6 +7,7 @@ import {openDatabase} from "./db/database.js";
 import {JobRunner} from "./jobs/job-runner.js";
 import {FfmpegService} from "./services/ffmpeg.js";
 import {FfprobeService} from "./services/ffprobe.js";
+import {localFilePicker} from "./services/file-picker.js";
 import {localFolderPicker} from "./services/folder-picker.js";
 import {RemotionRenderService} from "./services/remotion.js";
 import {OllamaService} from "./services/ollama.js";
@@ -67,6 +68,7 @@ const start = async (): Promise<void> => {
     database: databaseResult.database,
     // 폴더 선택 창은 앱이 설치된 위치에서 시작한다.
     defaultFolderPath: runtimeConfig.workspaceRoot,
+    filePicker: localFilePicker,
     finalizer,
     folderPicker: localFolderPicker,
     getComfy,
