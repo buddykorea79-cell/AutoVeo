@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 2,
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "totalFrames": 315,
+  "scenes": [
+    {
+      "id": "s_opening",
+      "type": "photo",
+      "mediaId": "m_000000000001",
+      "assetKey": "render-assets/m_000000000001.jpg",
+      "assetUrl": "/assets/render-assets/m_000000000001.jpg",
+      "startFrame": 0,
+      "durationInFrames": 108,
+      "visibleFrames": 108,
+      "transitionIn": {
+        "type": "cut",
+        "overlapFrames": 0
+      },
+      "motion": {
+        "type": "slow-push-in",
+        "fromScale": 1,
+        "toScale": 1.08,
+        "fromX": 0,
+        "toX": 0,
+        "fromY": 0,
+        "toY": 0
+      },
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": [
+        {
+          "text": "교토 · 히가시야마",
+          "lines": ["교토 · 히가시야마"],
+          "kind": "chapter-title",
+          "startFrame": 12,
+          "durationInFrames": 60,
+          "fadeInFrames": 6,
+          "fadeOutFrames": 6,
+          "style": "chapter-title"
+        }
+      ]
+    },
+    {
+      "id": "s_walk",
+      "type": "photo",
+      "mediaId": "m_000000000002",
+      "assetKey": "render-assets/m_000000000002.jpg",
+      "assetUrl": "/assets/render-assets/m_000000000002.jpg",
+      "startFrame": 99,
+      "durationInFrames": 108,
+      "visibleFrames": 99,
+      "transitionIn": {
+        "type": "crossfade",
+        "overlapFrames": 9
+      },
+      "motion": {
+        "type": "pan-left",
+        "fromScale": 1.12,
+        "toScale": 1.12,
+        "fromX": 0.04,
+        "toX": -0.04,
+        "fromY": 0,
+        "toY": 0
+      },
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": [
+        {
+          "text": "골목을 따라 걷던 아침",
+          "lines": ["골목을 따라 걷던 아침"],
+          "kind": "scene-caption",
+          "startFrame": 111,
+          "durationInFrames": 60,
+          "fadeInFrames": 6,
+          "fadeOutFrames": 6,
+          "style": "scene-caption"
+        }
+      ]
+    },
+    {
+      "id": "s_closing",
+      "type": "photo",
+      "mediaId": "m_000000000003",
+      "assetKey": "render-assets/m_000000000003.jpg",
+      "assetUrl": "/assets/render-assets/m_000000000003.jpg",
+      "startFrame": 207,
+      "durationInFrames": 108,
+      "visibleFrames": 108,
+      "transitionIn": {
+        "type": "cut",
+        "overlapFrames": 0
+      },
+      "motion": {
+        "type": "zoom-out",
+        "fromScale": 1.1,
+        "toScale": 1,
+        "fromX": 0,
+        "toX": 0,
+        "fromY": 0,
+        "toY": 0
+      },
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": []
+    }
+  ],
+  "audio": []
+}

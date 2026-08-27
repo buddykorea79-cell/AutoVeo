@@ -1,0 +1,32 @@
+{
+  "name": "autoveo",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @travel-movie/schema build && pnpm --filter @travel-movie/core build && concurrently --kill-others-on-fail --names server,web --prefix-colors cyan,magenta \"pnpm --filter @travel-movie/server dev\" \"pnpm --filter @travel-movie/web dev\"",
+    "build": "pnpm -r --if-present build",
+    "format": "prettier --write .",
+    "lint": "eslint . && prettier --check .",
+    "media:prepare": "pnpm --filter @travel-movie/core build && pnpm --filter @travel-movie/server media:prepare",
+    "render:demo": "pnpm --filter @travel-movie/schema build && pnpm --filter @travel-movie/server build && pnpm --filter @travel-movie/server render:demo",
+    "schema:validate": "pnpm --filter @travel-movie/schema validate",
+    "test": "pnpm --filter @travel-movie/schema build && pnpm --filter @travel-movie/core build && pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.2.0",
+    "concurrently": "10.0.5",
+    "eslint": "10.8.1",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.4",
+    "prettier": "3.9.6",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.67.0",
+    "vitest": "4.1.10"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 2,
+  "id": "p_kyoto_demo",
+  "title": "교토의 하루",
+  "style": "cinematic-travel",
+  "output": {
+    "aspect": "16:9",
+    "resolution": "1080p",
+    "fps": 30
+  },
+  "budget": {
+    "targetDurationSec": 10.5,
+    "targetSceneCount": 3,
+    "photoBaseSec": 3.6,
+    "photoMaxSec": 6,
+    "videoMaxSec": 8
+  },
+  "chapters": [
+    {
+      "id": "c_morning",
+      "title": "교토 · 히가시야마",
+      "dateLocal": "2026-05-12",
+      "place": "교토 · 히가시야마",
+      "mood": "calm",
+      "musicDirection": {
+        "mood": "calm",
+        "energy": 0.35
+      },
+      "scenes": [
+        {
+          "id": "s_opening",
+          "mediaId": "m_000000000001",
+          "role": "opening",
+          "importance": 0.95,
+          "durationSec": 3.6,
+          "motion": "slow-push-in",
+          "transitionIn": "cut",
+          "caption": {
+            "text": "교토 · 히가시야마",
+            "kind": "chapter-title",
+            "source": "rule"
+          },
+          "trim": null,
+          "sourceAudio": "mute",
+          "locked": false
+        },
+        {
+          "id": "s_walk",
+          "mediaId": "m_000000000002",
+          "role": "highlight",
+          "importance": 0.88,
+          "durationSec": 3.6,
+          "motion": "pan-left",
+          "transitionIn": "crossfade",
+          "caption": {
+            "text": "골목을 따라 걷던 아침",
+            "kind": "scene-caption",
+            "source": "user"
+          },
+          "trim": null,
+          "sourceAudio": "mute",
+          "locked": true
+        },
+        {
+          "id": "s_closing",
+          "mediaId": "m_000000000003",
+          "role": "closing",
+          "importance": 0.82,
+          "durationSec": 3.6,
+          "motion": "zoom-out",
+          "transitionIn": "cut",
+          "caption": null,
+          "trim": null,
+          "sourceAudio": "mute",
+          "locked": false
+        }
+      ]
+    }
+  ]
+}

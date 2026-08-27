@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 2,
+  "fps": 30,
+  "width": 1280,
+  "height": 720,
+  "totalFrames": 750,
+  "scenes": [
+    {
+      "id": "s_demo_title",
+      "type": "title",
+      "mediaId": null,
+      "assetKey": null,
+      "assetUrl": "여름, 제주",
+      "startFrame": 0,
+      "durationInFrames": 75,
+      "visibleFrames": 75,
+      "transitionIn": {"type": "cut", "overlapFrames": 0},
+      "motion": null,
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": [
+        {
+          "text": "제주로 떠난 하루",
+          "lines": ["제주로 떠난 하루"],
+          "kind": "chapter-title",
+          "startFrame": 12,
+          "durationInFrames": 50,
+          "fadeInFrames": 6,
+          "fadeOutFrames": 8,
+          "style": "chapter-title"
+        }
+      ]
+    },
+    {
+      "id": "s_demo_coast",
+      "type": "photo",
+      "mediaId": "m_demo_01",
+      "assetKey": "render-assets/demo-01.jpg",
+      "assetUrl": "/assets/render-assets/demo-01.jpg",
+      "startFrame": 66,
+      "durationInFrames": 105,
+      "visibleFrames": 96,
+      "transitionIn": {"type": "crossfade", "overlapFrames": 9},
+      "motion": {
+        "type": "slow-push-in",
+        "fromScale": 1,
+        "toScale": 1.1,
+        "fromX": 0,
+        "toX": 0.01,
+        "fromY": 0,
+        "toY": -0.01
+      },
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": []
+    },
+    {
+      "id": "s_demo_road",
+      "type": "montage",
+      "mediaId": "m_demo_02",
+      "assetKey": "render-assets/demo-02.jpg",
+      "assetUrl": "/assets/render-assets/demo-02.jpg",
+      "startFrame": 162,
+      "durationInFrames": 105,
+      "visibleFrames": 96,
+      "transitionIn": {"type": "crossfade", "overlapFrames": 9},
+      "montage": {
+        "items": [
+          {
+            "assetKey": "render-assets/demo-02.jpg",
+            "assetUrl": "/assets/render-assets/demo-02.jpg",
+            "mediaId": "m_demo_02",
+            "startFrame": 0,
+            "durationInFrames": 55,
+            "fadeInFrames": 0,
+            "fadeOutFrames": 5
+          },
+          {
+            "assetKey": "render-assets/demo-03.jpg",
+            "assetUrl": "/assets/render-assets/demo-03.jpg",
+            "mediaId": "m_demo_03",
+            "startFrame": 50,
+            "durationInFrames": 55,
+            "fadeInFrames": 5,
+            "fadeOutFrames": 0
+          }
+        ]
+      },
+      "motion": null,
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": [
+        {
+          "text": "바람이 길을 열어 주던 오후",
+          "lines": ["바람이 길을 열어 주던 오후"],
+          "kind": "scene-caption",
+          "startFrame": 174,
+          "durationInFrames": 60,
+          "fadeInFrames": 7,
+          "fadeOutFrames": 9,
+          "style": "scene-caption"
+        }
+      ]
+    },
+    {
+      "id": "s_demo_video",
+      "type": "video",
+      "mediaId": "m_demo_video",
+      "assetKey": "proxies/demo-video.mp4",
+      "assetUrl": "/assets/proxies/demo-video.mp4",
+      "startFrame": 258,
+      "durationInFrames": 120,
+      "visibleFrames": 111,
+      "transitionIn": {"type": "crossfade", "overlapFrames": 9},
+      "motion": null,
+      "trimStartFrame": 0,
+      "sourceAudio": "mute",
+      "captions": []
+    },
+    {
+      "id": "s_demo_field",
+      "type": "photo",
+      "mediaId": "m_demo_03",
+      "assetKey": "render-assets/demo-03.jpg",
+      "assetUrl": "/assets/render-assets/demo-03.jpg",
+      "startFrame": 369,
+      "durationInFrames": 105,
+      "visibleFrames": 96,
+      "transitionIn": {"type": "crossfade", "overlapFrames": 9},
+      "motion": {
+        "type": "zoom-out",
+        "fromScale": 1.12,
+        "toScale": 1,
+        "fromX": 0,
+        "toX": 0,
+        "fromY": 0,
+        "toY": 0
+      },
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": []
+    },
+    {
+      "id": "s_demo_sunset",
+      "type": "photo",
+      "mediaId": "m_demo_04",
+      "assetKey": "render-assets/demo-04.jpg",
+      "assetUrl": "/assets/render-assets/demo-04.jpg",
+      "startFrame": 465,
+      "durationInFrames": 105,
+      "visibleFrames": 96,
+      "transitionIn": {"type": "crossfade", "overlapFrames": 9},
+      "motion": {
+        "type": "pan-right",
+        "fromScale": 1.1,
+        "toScale": 1.1,
+        "fromX": -0.035,
+        "toX": 0.035,
+        "fromY": 0,
+        "toY": 0
+      },
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": [
+        {
+          "text": "노을이 천천히 바다를 물들였다",
+          "lines": ["노을이 천천히", "바다를 물들였다"],
+          "kind": "location-date",
+          "startFrame": 477,
+          "durationInFrames": 60,
+          "fadeInFrames": 7,
+          "fadeOutFrames": 9,
+          "style": "location-date"
+        }
+      ]
+    },
+    {
+      "id": "s_demo_night",
+      "type": "photo",
+      "mediaId": "m_demo_05",
+      "assetKey": "render-assets/demo-05.jpg",
+      "assetUrl": "/assets/render-assets/demo-05.jpg",
+      "startFrame": 561,
+      "durationInFrames": 105,
+      "visibleFrames": 96,
+      "transitionIn": {"type": "crossfade", "overlapFrames": 9},
+      "motion": {
+        "type": "zoom-in",
+        "fromScale": 1,
+        "toScale": 1.11,
+        "fromX": 0,
+        "toX": 0,
+        "fromY": 0.015,
+        "toY": -0.015
+      },
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": []
+    },
+    {
+      "id": "s_demo_end",
+      "type": "color",
+      "mediaId": null,
+      "assetKey": null,
+      "assetUrl": "#24314d",
+      "startFrame": 657,
+      "durationInFrames": 93,
+      "visibleFrames": 84,
+      "transitionIn": {"type": "fade", "overlapFrames": 9},
+      "motion": null,
+      "trimStartFrame": null,
+      "sourceAudio": "mute",
+      "captions": []
+    }
+  ],
+  "audio": []
+}

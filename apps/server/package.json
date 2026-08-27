@@ -1,0 +1,39 @@
+{
+  "name": "@travel-movie/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsx src/index.ts",
+    "dev:watch": "tsx watch src/index.ts",
+    "media:prepare": "tsx src/cli/media-prepare.ts",
+    "render:demo": "tsx src/cli/render-demo.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run src",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@travel-movie/core": "workspace:*",
+    "@travel-movie/schema": "workspace:*",
+    "@remotion/bundler": "4.0.513",
+    "@remotion/renderer": "4.0.513",
+    "better-sqlite3": "12.4.1",
+    "dotenv": "17.4.2",
+    "exifr": "7.1.3",
+    "fastify": "5.12.0",
+    "ffmpeg-ffprobe-static": "6.1.2-rc.1",
+    "heic-convert": "2.1.0",
+    "p-limit": "7.3.1",
+    "remotion": "4.0.513",
+    "sharp": "0.35.3",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "9.6.0",
+    "@types/heic-convert": "2.1.1",
+    "@types/piexifjs": "1.0.0",
+    "piexifjs": "1.0.6",
+    "tsx": "4.23.12"
+  }
+}
